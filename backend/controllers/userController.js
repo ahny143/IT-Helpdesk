@@ -1,1 +1,10 @@
-// User controller
+const mongoose = require("mongoose");
+const User = require("../models/User");
+const service = require("../services/userService");
+const { profileSchema, createUserSchema, statusSchema } = require("../validators/userValidator");
+const profile = (req, res) => res.json({ success: true, data: { user: service.safe(req.user) } });
+const updateProfile = async (req, res, next) => { try { const user = await service.updateProfile(req.user, profileSchema.parse(req.body)); res.json({ success: true, data: { user: service.safe(user) } }); } catch (e) { next(e); } };
+const list = async (req, res, next) => { try { const users = await User.find().sort({ createdAt: -1 }); res.json({ success: true, data: { users: users.map(service.safe) } }); } catch (e) { next(e); } };
+const create = async (req, res, next) => { try { const data = createUserSchema.parse(req.body); if (await User.findOne({ email: data.email })) return res.status(409).json({ success: false, message: "Email is already registered" }); const user = await service.createStaff(data); res.status(201).json({ success: true, data: { user: service.safe(user) } }); } catch (e) { next(e); } };
+const setStatus = async (req, res, next) => { try { if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ success: false, message: "Invalid user id" }); const { isActive } = statusSchema.parse(req.body); if (req.params.id === req.user._id.toString() && !isActive) return res.status(400).json({ success: false, message: "You cannot deactivate your own account" }); const user = await User.findByIdAndUpdate(req.params.id, { isActive }, { new: true, runValidators: true }); if (!user) return res.status(404).json({ success: false, message: "User not found" }); res.json({ success: true, data: { user: service.safe(user) } }); } catch (e) { next(e); } };
+module.exports = { profile, updateProfile, list, create, setStatus };

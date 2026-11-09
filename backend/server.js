@@ -13,7 +13,7 @@ const startServer = async () => {
         const server = http.createServer(app);
 
         server.listen(PORT, () => {
-            console.log(`Server is running on port $DIL0`);
+            console.log(`Server is running on port ${PORT}`);
         });
     } catch (error) {
         console.error("Cannot start server:", error.message);

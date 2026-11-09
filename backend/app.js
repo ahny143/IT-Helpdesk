@@ -1,5 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -10,6 +13,15 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+
+app.use((error, req, res, next) => {
+    if (error.name === "ZodError") return res.status(400).json({ success: false, message: "Validation failed", errors: error.issues });
+    if (error.code === 11000) return res.status(409).json({ success: false, message: "Email is already registered" });
+    return res.status(error.status || 500).json({ success: false, message: error.status ? error.message : "Internal server error" });
+});
 
 app.get("/", (req, res) => {
     res.json({

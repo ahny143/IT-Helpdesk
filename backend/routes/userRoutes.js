@@ -1,1 +1,11 @@
-// User routes
+const router = require("express").Router();
+const auth = require("../middlewares/authMiddleware");
+const role = require("../middlewares/roleMiddleware");
+const controller = require("../controllers/userController");
+router.use(auth);
+router.get("/profile", controller.profile);
+router.put("/profile", controller.updateProfile);
+router.get("/", role("ADMIN"), controller.list);
+router.post("/", role("ADMIN"), controller.create);
+router.patch("/:id/status", role("ADMIN"), controller.setStatus);
+module.exports = router;
