@@ -1,0 +1,1 @@
+// Statistic card component

@@ -1,0 +1,1 @@
+// Ticket chart component
