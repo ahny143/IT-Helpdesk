@@ -1,1 +1,13 @@
-// Ticket routes
+const router = require("express").Router();
+const auth = require("../middlewares/authMiddleware");
+const role = require("../middlewares/roleMiddleware");
+const controller = require("../controllers/ticketController");
+router.use(auth);
+router.post("/", role("EMPLOYEE"), controller.create);
+router.get("/", controller.list);
+router.get("/:id/history", controller.history);
+router.get("/:id", controller.getById);
+router.put("/:id", controller.update);
+router.patch("/:id/assign", role("ADMIN"), controller.assign);
+router.patch("/:id/status", controller.status);
+module.exports = router;
