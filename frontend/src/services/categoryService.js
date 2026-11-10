@@ -1,0 +1,5 @@
+import api from "./api";
+export const listCategories = (params) => api.get("/categories", { params });
+export const createCategory = (data) => api.post("/categories", data);
+export const updateCategory = (id, data) => api.put(`/categories/${id}`, data);
+export const updateCategoryStatus = (id, isActive) => api.patch(`/categories/${id}/status`, { isActive });

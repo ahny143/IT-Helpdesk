@@ -182,3 +182,6 @@
     border-right-color: var(--border);
   }
 }
+body { margin: 0; background: #f5f7fb; }
+.app-shell { min-height: 100vh; }.content { padding: 24px; max-width: 1400px; width: 100%; box-sizing: border-box; margin: 0 auto; }.topbar { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 0 24px; }.topbar h4 { margin: 0; }.logo { color: #fff; font-weight: 700; padding: 20px 16px; letter-spacing: 1px; }.auth-shell { min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg, #0b1f3a, #1677ff); padding: 24px; }.auth-card { width: min(460px, 100%); }.auth-brand { position: absolute; top: 48px; left: 48px; color: #fff; }.brand-mark { display: inline-grid; place-items: center; background: #fff; color: #1677ff; width: 44px; height: 44px; border-radius: 12px; font-weight: 800; }.auth-brand h1 { display: inline; margin-left: 12px; }.center-page { min-height: 100vh; display: grid; place-items: center; }.full-width { width: 100%; }
+@media (max-width: 700px) { .content { padding: 12px; }.topbar { padding: 0 12px; }.topbar span { display: none; }.auth-brand { position: static; margin-bottom: 16px; text-align: center; }.auth-shell { display: flex; flex-direction: column; } }

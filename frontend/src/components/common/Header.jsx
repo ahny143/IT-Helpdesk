@@ -1,1 +1,2 @@
-// Header component
+import { Avatar, Button, Layout, Space, Typography } from "antd"; import { LogoutOutlined, UserOutlined } from "@ant-design/icons"; import { useNavigate } from "react-router-dom"; import useAuth from "../../hooks/useAuth";
+export default function Header() { const { user, logout } = useAuth(); const nav = useNavigate(); return <Layout.Header className="topbar"><Typography.Title level={4}>Workspace</Typography.Title><Space><span>{user?.fullName} · {user?.role}</span><Avatar icon={<UserOutlined />} /><Button type="text" icon={<LogoutOutlined />} onClick={async () => { await logout(); nav("/login"); }}>Logout</Button></Space></Layout.Header>; }

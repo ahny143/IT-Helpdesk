@@ -1,1 +1,12 @@
-// User management page
+import { Button, Card, Form, Input, Modal, Popconfirm, Select, Switch, Table, Tag, message } from "antd";
+import { useEffect, useState } from "react";
+import * as service from "../../services/userService";
+
+export default function UserManagement() {
+    const [rows, setRows] = useState([]); const [open, setOpen] = useState(false); const [statusLoadingId, setStatusLoadingId] = useState(null); const [form] = Form.useForm();
+    const load = () => service.listUsers().then((r) => setRows(r.data.data.users));
+    useEffect(() => { load(); }, []);
+    const create = async (v) => { await service.createUser(v); message.success("User created"); setOpen(false); form.resetFields(); load(); };
+    const status = async (u, checked) => { setStatusLoadingId(u._id); try { await service.updateUserStatus(u._id, checked); message.success(`${checked ? "Activated" : "Deactivated"} ${u.fullName}`); await load(); } catch (error) { message.error(error.response?.data?.message || "Unable to update account status"); } finally { setStatusLoadingId(null); } };
+    return <Card title="User management" extra={<Button type="primary" onClick={() => setOpen(true)}>Create staff account</Button>}><Table rowKey="_id" dataSource={rows} columns={[{ title: "Name", dataIndex: "fullName" }, { title: "Email", dataIndex: "email" }, { title: "Role", dataIndex: "role", render: (v) => <Tag>{v}</Tag> }, { title: "Status", dataIndex: "isActive", render: (v, r) => <Popconfirm title={`${v ? "Deactivate" : "Activate"} ${r.fullName}?`} description={`Confirm you want to ${v ? "deactivate" : "activate"} this account.`} okText="Confirm" cancelText="Cancel" onConfirm={() => status(r, !v)} disabled={statusLoadingId !== null}><Switch checked={v} loading={statusLoadingId === r._id} disabled={statusLoadingId !== null} /></Popconfirm> }]} /><Modal open={open} title="Create staff account" onCancel={() => setOpen(false)} footer={null}><Form form={form} layout="vertical" onFinish={create}><Form.Item name="fullName" label="Full name" rules={[{ required: true }]}><Input /></Form.Item><Form.Item name="email" label="Email" rules={[{ required: true, type: "email" }]}><Input /></Form.Item><Form.Item name="password" label="Password" rules={[{ required: true, min: 8 }]}><Input.Password /></Form.Item><Form.Item name="role" label="Role" rules={[{ required: true }]}><Select options={["IT_SUPPORT", "ADMIN"].map((v) => ({ label: v, value: v }))} /></Form.Item><Form.Item name="phone" label="Phone"><Input /></Form.Item><Form.Item name="department" label="Department"><Input /></Form.Item><Button type="primary" htmlType="submit">Create</Button></Form></Modal></Card>;
+}
