@@ -1,1 +1,11 @@
-// Category routes
+const router = require("express").Router();
+const auth = require("../middlewares/authMiddleware");
+const role = require("../middlewares/roleMiddleware");
+const controller = require("../controllers/categoryController");
+router.use(auth);
+router.get("/", controller.list);
+router.get("/:id", controller.getById);
+router.post("/", role("ADMIN"), controller.create);
+router.put("/:id", role("ADMIN"), controller.update);
+router.patch("/:id/status", role("ADMIN"), controller.setStatus);
+module.exports = router;
