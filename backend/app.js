@@ -6,6 +6,7 @@ const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const attachmentRoutes = require("./routes/attachmentRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/tickets", ticketRoutes);
 app.use("/api", attachmentRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use((error, req, res, next) => {
     console.error(`${req.method} ${req.originalUrl}:`, error.message);

@@ -1,1 +1,12 @@
-// Notification service
+const mongoose = require("mongoose");
+const Notification = require("../models/Notification");
+const User = require("../models/User");
+const emailService = require("./emailService");
+const fail = (message, status) => Object.assign(new Error(message), { status });
+const validId = (value) => { if (!mongoose.isValidObjectId(value)) throw fail("Invalid notification id", 400); return value; };
+const create = async ({ userId, ticketId = null, title, message, type, sendEmail = true }) => { const notification = await Notification.create({ userId, ticketId, title, message, type }); if (sendEmail && emailService.configured) { void (async () => { const user = await User.findById(userId).select("email"); if (user?.email) { const Ticket = require("../models/Ticket"); const ticket = ticketId ? await Ticket.findById(ticketId).select("ticketCode") : null; await emailService.sendNotificationEmail({ to: user.email, title, message, ticketCode: ticket?.ticketCode }); } })().catch((error) => console.error("Notification email preparation failed:", error.message)); } return notification; };
+const list = async (userId, query = {}) => { const page = Math.max(Number(query.page) || 1, 1); const limit = Math.min(Math.max(Number(query.limit) || 10, 1), 50); const filter = { userId }; const [items, total] = await Promise.all([Notification.find(filter).populate("ticketId", "ticketCode title").sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit), Notification.countDocuments(filter)]); return { items, total, page, limit, pages: Math.ceil(total / limit) }; };
+const unreadCount = (userId) => Notification.countDocuments({ userId, isRead: false });
+const markRead = async (userId, notificationId) => { const notification = await Notification.findOneAndUpdate({ _id: validId(notificationId), userId }, { isRead: true }, { new: true }).populate("ticketId", "ticketCode title"); if (!notification) throw fail("Notification not found", 404); return notification; };
+const markAllRead = (userId) => Notification.updateMany({ userId, isRead: false }, { isRead: true });
+module.exports = { create, list, unreadCount, markRead, markAllRead };
