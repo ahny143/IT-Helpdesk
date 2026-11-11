@@ -13,13 +13,10 @@ const userSchema = new mongoose.Schema({
     isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
-userSchema.index({ email: 1 }, { unique: true });
-
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function() {
     this.email = this.email.trim().toLowerCase();
-    if (!this.isModified("password")) return next();
+    if (!this.isModified("password")) return;
     this.password = await bcrypt.hash(this.password, 12);
-    next();
 });
 
 userSchema.methods.comparePassword = function(candidate) {

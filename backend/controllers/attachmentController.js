@@ -1,0 +1,6 @@
+const service = require("../services/attachmentService");
+const { attachmentRequestSchema } = require("../validators/attachmentValidator");
+const upload = async (req, res, next) => { try { const data = attachmentRequestSchema.parse(req.body || {}); const attachments = await service.createMany(req.user, req.params.ticketId, req.files || [], data.commentId); res.status(201).json({ success: true, data: { attachments } }); } catch (e) { next(e); } };
+const list = async (req, res, next) => { try { res.json({ success: true, data: { attachments: await service.list(req.user, req.params.ticketId) } }); } catch (e) { next(e); } };
+const download = async (req, res, next) => { try { const attachment = await service.getForDownload(req.user, req.params.attachmentId); const upstream = await fetch(attachment.fileUrl); if (!upstream.ok) throw Object.assign(new Error("Attachment storage is unavailable"), { status: 502 }); res.setHeader("Content-Type", attachment.fileType); res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(attachment.fileName)}`); res.send(Buffer.from(await upstream.arrayBuffer())); } catch (e) { next(e); } };
+module.exports = { upload, list, download };
