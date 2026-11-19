@@ -8,4 +8,5 @@ const historySchema = new mongoose.Schema({
     description: { type: String, required: true, trim: true, maxlength: 1000 }
 }, { timestamps: { createdAt: true, updatedAt: false }, collection: "ticket_histories" });
 historySchema.index({ ticketId: 1, createdAt: -1 });
+historySchema.index({ ticketId: 1, action: 1, "newValue.slaVersion": 1 }, { unique: true, partialFilterExpression: { action: { $in: ["SLA_WARNING", "SLA_VIOLATION"] }, "newValue.slaVersion": { $exists: true } } });
 module.exports = mongoose.model("TicketHistory", historySchema);

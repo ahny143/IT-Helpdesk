@@ -11,6 +11,7 @@ import CategoryManagement from "../pages/admin/CategoryManagement";
 import TicketList from "../pages/tickets/TicketList";
 import CreateTicket from "../pages/employee/CreateTicket";
 import TicketDetail from "../pages/tickets/TicketDetail";
+import Reports from "../pages/admin/Reports";
 
 export default function AppRoutes() {
     return <Routes>
@@ -31,6 +32,7 @@ export default function AppRoutes() {
             <Route element={<ProtectedRoute roles={["ADMIN"]} />}>
                 <Route path="/admin/users" element={<UserManagement />} />
                 <Route path="/admin/categories" element={<CategoryManagement />} />
+                <Route path="/admin/reports" element={<Reports />} />
             </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

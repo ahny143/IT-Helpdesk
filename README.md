@@ -72,6 +72,20 @@ SEED_ADMIN_PASSWORD=<strong-password>
 
 `MAX_FILE_SIZE` tính theo byte. `MAX_FILES_PER_UPLOAD` là giới hạn số file trong một request và được Backend đọc từ môi trường.
 
+### Cấu hình Email Notification tùy chọn
+
+Email Notification không bắt buộc để khởi động Backend. Khi chưa có đủ các biến dưới đây, Email Service được vô hiệu hóa an toàn, không tạo SMTP transporter và không gửi email. In-app Notification vẫn hoạt động độc lập.
+
+```env
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=<smtp-user>
+SMTP_PASS=<smtp-password>
+SMTP_FROM=IT Helpdesk <no-reply@example.com>
+```
+
+Không điền giá trị giả vào `backend/.env`. Khi cấu hình thiếu hoặc `SMTP_PORT` không hợp lệ, Backend chỉ ghi log dạng `Email notifications disabled` kèm tên biến còn thiếu; không ghi password, token hoặc credential. Sau khi cấu hình SMTP thật, cần khởi động lại Backend và kiểm thử gửi email thực tế.
+
 ## Cấu hình Frontend
 
 Tạo `frontend/.env`:

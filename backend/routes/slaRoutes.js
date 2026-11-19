@@ -1,1 +1,15 @@
-// SLA routes
+const router = require("express").Router();
+const auth = require("../middlewares/authMiddleware");
+const role = require("../middlewares/roleMiddleware");
+const controller = require("../controllers/slaController");
+router.use(auth);
+router.get("/configs", controller.listConfigs);
+router.put("/configs/:priority", role("ADMIN"), controller.updateConfig);
+router.get("/holidays", controller.listHolidays);
+router.post("/holidays", role("ADMIN"), controller.createHoliday);
+router.put("/holidays/:id", role("ADMIN"), controller.updateHoliday);
+router.patch("/holidays/:id/status", role("ADMIN"), controller.updateHoliday);
+router.get("/tickets/:ticketId", controller.ticketSla);
+router.get("/tickets", controller.monitoring);
+router.get("/reports", role("ADMIN"), controller.report);
+module.exports = router;

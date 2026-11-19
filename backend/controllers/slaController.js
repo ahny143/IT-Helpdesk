@@ -1,1 +1,11 @@
-// SLA controller
+const service = require("../services/slaService");
+const reportService = require("../services/slaReportService");
+const listConfigs = async (req, res, next) => { try { res.json({ success: true, data: { configs: await service.listConfigs() } }); } catch (e) { next(e); } };
+const updateConfig = async (req, res, next) => { try { const minutes = Number(req.body.resolutionMinutes); const config = await service.upsertConfig(req.params.priority, minutes, req.user._id); res.json({ success: true, data: { config } }); } catch (e) { next(e); } };
+const listHolidays = async (req, res, next) => { try { res.json({ success: true, data: { holidays: await service.listHolidays() } }); } catch (e) { next(e); } };
+const createHoliday = async (req, res, next) => { try { res.status(201).json({ success: true, data: { holiday: await service.createHoliday(req.body, req.user._id) } }); } catch (e) { next(e); } };
+const updateHoliday = async (req, res, next) => { try { res.json({ success: true, data: { holiday: await service.updateHoliday(req.params.id, req.body) } }); } catch (e) { next(e); } };
+const ticketSla = async (req, res, next) => { try { res.json({ success: true, data: { sla: await service.getTicketSla(req.user, req.params.ticketId) } }); } catch (e) { next(e); } };
+const monitoring = async (req, res, next) => { try { res.json({ success: true, data: { tickets: await service.listMonitoring(req.user) } }); } catch (e) { next(e); } };
+const report = async (req, res, next) => { try { res.json({ success: true, data: await reportService.report(req.user, req.query) }); } catch (e) { next(e); } };
+module.exports = { listConfigs, updateConfig, listHolidays, createHoliday, updateHoliday, ticketSla, monitoring, report };

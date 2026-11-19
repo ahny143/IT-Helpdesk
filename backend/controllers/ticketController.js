@@ -1,6 +1,6 @@
 const service = require("../services/ticketService");
 const { createTicketSchema, updateTicketSchema, assignTicketSchema, statusSchema, listQuerySchema } = require("../validators/ticketValidator");
-const create = async (req, res, next) => { try { const ticket = await service.create(createTicketSchema.parse(req.body), req.user._id); res.status(201).json({ success: true, data: { ticket } }); } catch (e) { next(e); } };
+const create = async (req, res, next) => { try { const ticket = await service.create(createTicketSchema.parse(req.body), req.user._id); const withSla = await service.initializeSla(ticket); res.status(201).json({ success: true, data: { ticket: withSla || ticket } }); } catch (e) { next(e); } };
 const list = async (req, res, next) => { try { res.json({ success: true, data: await service.list(req.user, listQuerySchema.parse(req.query)) }); } catch (e) { next(e); } };
 const getById = async (req, res, next) => { try { res.json({ success: true, data: { ticket: await service.getById(req.user, req.params.id) } }); } catch (e) { next(e); } };
 const update = async (req, res, next) => { try { res.json({ success: true, data: { ticket: await service.update(req.user, req.params.id, updateTicketSchema.parse(req.body)) } }); } catch (e) { next(e); } };
