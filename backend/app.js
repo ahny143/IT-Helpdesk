@@ -9,6 +9,7 @@ const attachmentRoutes = require("./routes/attachmentRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const slaRoutes = require("./routes/slaRoutes");
 const ratingRoutes = require("./routes/ratingRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api", attachmentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/sla", slaRoutes);
 app.use("/api/ratings", ratingRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use((error, req, res, next) => {
     console.error(`${req.method} ${req.originalUrl}:`, error.message);
