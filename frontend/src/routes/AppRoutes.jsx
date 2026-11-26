@@ -12,6 +12,7 @@ import TicketList from "../pages/tickets/TicketList";
 import CreateTicket from "../pages/employee/CreateTicket";
 import TicketDetail from "../pages/tickets/TicketDetail";
 import Reports from "../pages/admin/Reports";
+import RatingManagement from "../pages/admin/RatingManagement";
 
 export default function AppRoutes() {
     return <Routes>
@@ -33,6 +34,7 @@ export default function AppRoutes() {
                 <Route path="/admin/users" element={<UserManagement />} />
                 <Route path="/admin/categories" element={<CategoryManagement />} />
                 <Route path="/admin/reports" element={<Reports />} />
+                <Route path="/admin/ratings" element={<RatingManagement />} />
             </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

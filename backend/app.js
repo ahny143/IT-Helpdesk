@@ -8,6 +8,7 @@ const ticketRoutes = require("./routes/ticketRoutes");
 const attachmentRoutes = require("./routes/attachmentRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const slaRoutes = require("./routes/slaRoutes");
+const ratingRoutes = require("./routes/ratingRoutes");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/api/tickets", ticketRoutes);
 app.use("/api", attachmentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/sla", slaRoutes);
+app.use("/api/ratings", ratingRoutes);
 
 app.use((error, req, res, next) => {
     console.error(`${req.method} ${req.originalUrl}:`, error.message);
